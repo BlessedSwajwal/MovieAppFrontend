@@ -6,6 +6,6 @@ import Landing from "./pages/landing.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <Landing />
+    <App />
   </React.StrictMode>
 );

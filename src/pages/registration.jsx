@@ -1,4 +1,33 @@
+import { useEffect } from "react";
+import { useAuth } from "../hooks/auth";
+import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+
 function Registeration() {
+  const isLoggedIn = useAuth();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/login");
+    }
+  }, [isLoggedIn, navigate]);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      firstname: "",
+      lastname: "",
+      email: "",
+      username: "",
+      password: "",
+      confirmpassword: "",
+    },
+  });
+
+  const onSubmit = (data) => console.log(data);
   return (
     <>
       <section className="bg-gray-50 dark:bg-gray-900">
@@ -19,7 +48,11 @@ function Registeration() {
               <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                 Create an account
               </h1>
-              <htmlForm className="space-y-4 md:space-y-6" action="#">
+              <form
+                className="space-y-4 md:space-y-6"
+                action="#"
+                onSubmit={handleSubmit(onSubmit)}
+              >
                 <div className="flex gap-4">
                   <div>
                     <label
@@ -29,6 +62,9 @@ function Registeration() {
                       First Name
                     </label>
                     <input
+                      {...register("firstname", {
+                        required: true,
+                      })}
                       type="text"
                       name="firstname"
                       id="firstname"
@@ -36,6 +72,15 @@ function Registeration() {
                       placeholder="John"
                       required=""
                     />
+                    {errors.firstname && (
+                      <p
+                        className="flex justify-center"
+                        color="red"
+                        role="alert"
+                      >
+                        Required
+                      </p>
+                    )}
                   </div>
                   <div>
                     <label
@@ -45,6 +90,10 @@ function Registeration() {
                       Last Name
                     </label>
                     <input
+                      {...register("lastname", {
+                        required: true,
+                        maxLength: 20,
+                      })}
                       type="text"
                       name="lastname"
                       id="lastname"
@@ -52,6 +101,15 @@ function Registeration() {
                       placeholder="Doe"
                       required=""
                     />
+                    {errors.lastname && (
+                      <p
+                        className="flex justify-center"
+                        color="red"
+                        role="alert"
+                      >
+                        Required
+                      </p>
+                    )}
                   </div>
                 </div>
                 <div>
@@ -62,6 +120,13 @@ function Registeration() {
                     Your email
                   </label>
                   <input
+                    {...register("email", {
+                      required: "Email is required",
+                      pattern: {
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                        message: "Invalid email address",
+                      },
+                    })}
                     type="email"
                     name="email"
                     id="email"
@@ -69,6 +134,7 @@ function Registeration() {
                     placeholder="name@company.com"
                     required=""
                   />
+                  {errors.email && errors.email?.message}
                 </div>
                 <div>
                   <label
@@ -78,6 +144,9 @@ function Registeration() {
                     Username
                   </label>
                   <input
+                    {...register("username", {
+                      required: "Username is required.",
+                    })}
                     type="text"
                     name="username"
                     id="username"
@@ -85,6 +154,7 @@ function Registeration() {
                     placeholder="johndoe"
                     required=""
                   />
+                  {errors.username && errors.username?.message}
                 </div>
                 <div>
                   <label
@@ -94,6 +164,9 @@ function Registeration() {
                     Password
                   </label>
                   <input
+                    {...register("password", {
+                      required: "Password is required.",
+                    })}
                     type="password"
                     name="password"
                     id="password"
@@ -101,8 +174,9 @@ function Registeration() {
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required=""
                   />
+                  {errors.password && errors.password?.message}
                 </div>
-                <div>
+                {/* <div>
                   <label
                     htmlFor="confirm-password"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -117,32 +191,8 @@ function Registeration() {
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required=""
                   />
-                </div>
-                <div className="flex items-start">
-                  <div className="flex items-center h-5">
-                    <input
-                      id="terms"
-                      aria-describedby="terms"
-                      type="checkbox"
-                      className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
-                      required=""
-                    />
-                  </div>
-                  <div className="ml-3 text-sm">
-                    <label
-                      htmlFor="terms"
-                      className="font-light text-gray-500 dark:text-gray-300"
-                    >
-                      I accept the{" "}
-                      <a
-                        className="font-medium text-primary-600 hover:underline dark:text-primary-500"
-                        href="#"
-                      >
-                        Terms and Conditions
-                      </a>
-                    </label>
-                  </div>
-                </div>
+                </div> */}
+
                 <button
                   type="submit"
                   className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
@@ -151,14 +201,14 @@ function Registeration() {
                 </button>
                 <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                   Already have an account?{" "}
-                  <a
-                    href="#"
+                  <Link
+                    to={"/login"}
                     className="font-medium text-primary-600 hover:underline dark:text-primary-500"
                   >
                     Login here
-                  </a>
+                  </Link>
                 </p>
-              </htmlForm>
+              </form>
             </div>
           </div>
         </div>
