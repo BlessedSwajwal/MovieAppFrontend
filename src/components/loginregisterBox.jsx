@@ -14,7 +14,7 @@ const LoginRegisterBox = () => (
     <Link to={`/login`} style={{ textDecoration: "none" }}>
       <StyledLinks>SIGN IN</StyledLinks>
     </Link>
-    <Link to={`/register`} style={{ textDecoration: "none" }}>
+    <Link to={`/`} style={{ textDecoration: "none" }}>
       <StyledLinks>SIGN UP</StyledLinks>
     </Link>
   </Box>

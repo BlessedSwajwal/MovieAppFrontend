@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import createMovie from "../api/movies/createMovie";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import DatePicker from "react-date-picker";
 import "react-date-picker/dist/DatePicker.css";
@@ -9,6 +9,14 @@ import "react-calendar/dist/Calendar.css";
 function CreateMovie() {
   const navigate = useNavigate();
   const [startDate, setStartDate] = useState(new Date());
+  const [showCreatedMessage, setShowCreatedMessage] = useState(false);
+
+  useEffect(() => {
+    if (showCreatedMessage) {
+      const timeoutId = setTimeout(() => setShowCreatedMessage(false), 3000); // Set timer for 3 seconds
+      return () => clearTimeout(timeoutId); // Cleanup function for the timer
+    }
+  }, [showCreatedMessage]);
 
   const {
     register,
@@ -35,7 +43,7 @@ function CreateMovie() {
     console.log("Date");
     console.log(date);
     var result = await createMovie(title, description, file, date);
-    navigate(`/movies/${result.id}`);
+    navigate(`/movies?created=true`);
   };
 
   return (
@@ -133,6 +141,15 @@ function CreateMovie() {
             >
               Submit
             </button>
+            {showCreatedMessage && (
+              <div
+                id="alertMessage"
+                className="text-2xl alert alert-success"
+                role="alert"
+              >
+                Movie saved successfully!
+              </div>
+            )}
           </div>
         </form>
       </div>

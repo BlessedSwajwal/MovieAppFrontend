@@ -7,7 +7,7 @@ async function deleteMovie(movieId) {
       Authorization: `Bearer ${window.localStorage.getItem("auth-token")}`,
     };
     //var result = await axios.get(apiUrl, headers);
-    var result = await axios.get(apiUrl, { headers });
+    var result = await axios.delete(apiUrl, { headers });
     return result.data;
   } catch (error) {
     console.log(error);

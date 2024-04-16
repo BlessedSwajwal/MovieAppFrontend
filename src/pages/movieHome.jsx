@@ -1,29 +1,32 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../hooks/auth";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { getMovies } from "../api/movies/getMovies";
+import { getMovies, movieImageFor } from "../api/movies/getMovies";
 import { Grid, Paper } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { isAdmin } from "../api/userAuth";
 import SearchMovieBar from "../components/searchMovie";
+import Toast from "../components/toast";
 
 function MovieHome() {
   const isLoggedIn = useAuth();
-  const [searchParams] = useSearchParams();
+  console.log("Is logged in: " + isLoggedIn);
+  let [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const [movies, setMovies] = useState(null);
   const currentPage = searchParams.get("page") ? searchParams.get("page") : 0;
+  const [isUserAdmin, setIsUserAdmin] = useState(false);
 
   useEffect(() => {
-    async function fetchMovies(page) {
-      var fetchedMovies = await getMovies(page ? page : 0);
-      setMovies(fetchedMovies);
-    }
-
     if (!isLoggedIn) {
       navigate("/login");
       return;
     }
+    async function fetchMovies(page) {
+      var fetchedMovies = await getMovies(page ? page : 0);
+      setMovies(fetchedMovies);
+    }
+    setIsUserAdmin(isAdmin());
     fetchMovies(searchParams.get("page"));
   }, [isLoggedIn, navigate, searchParams]);
 
@@ -37,7 +40,13 @@ function MovieHome() {
 
   return (
     <div className="p-10">
-      {isAdmin() && (
+      {searchParams.get("deleted") == "true" && (
+        <Toast message="Movie Deleted successfully!" />
+      )}
+      {searchParams.get("created") == "true" && (
+        <Toast message="Movie Created successfully!" />
+      )}
+      {isUserAdmin && (
         <>
           <button
             type="button"
@@ -45,6 +54,13 @@ function MovieHome() {
             onClick={() => navigate("/movies/create")}
           >
             Add new
+          </button>
+          <button
+            type="button"
+            className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+            onClick={() => navigate("/movies/trending?page=1")}
+          >
+            Trending
           </button>
         </>
       )}
@@ -57,7 +73,7 @@ function MovieHome() {
                 <Link to={`/movies/${movie.id}`}>
                   <Item className="flex justify-center">
                     <img
-                      src={`data:image;base64,${movie.image}`}
+                      src={movieImageFor(movie.imagePath)}
                       style={{ width: "300px" }} // Corrected style prop
                       className="rounded-3xl"
                       alt="Movie Image"

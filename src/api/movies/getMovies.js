@@ -27,3 +27,8 @@ export async function searchMovies(searchQuery) {
     console.log(error);
   }
 }
+
+export function movieImageFor(imagePath) {
+  var apiUrl = import.meta.env.VITE_API_URL;
+  return `${apiUrl}/Images/${imagePath}`;
+}

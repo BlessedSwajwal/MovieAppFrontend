@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useAuth } from "../hooks/auth";
 import { Link, useNavigate, useLoaderData } from "react-router-dom";
-import { searchMovies } from "../api/movies/getMovies";
+import { movieImageFor, searchMovies } from "../api/movies/getMovies";
 import { Grid, Paper } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
@@ -14,13 +14,6 @@ function SearchMovies() {
   // const isLoggedIn = useAuth();
   // const navigate = useNavigate();
   const { movies } = useLoaderData();
-
-  // useEffect(() => {
-  //   if (!isLoggedIn) {
-  //     navigate("/login");
-  //     return;
-  //   }
-  // }, [isLoggedIn, navigate]);
 
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: "aliceblue",
@@ -40,7 +33,7 @@ function SearchMovies() {
                 <Link to={`/movies/${movie.id}`}>
                   <Item className="flex justify-center">
                     <img
-                      src={`data:image;base64,${movie.image}`}
+                      src={movieImageFor(movie.imagePath)}
                       style={{ width: "300px" }} // Corrected style prop
                       className="rounded-3xl"
                       alt="Movie Image"

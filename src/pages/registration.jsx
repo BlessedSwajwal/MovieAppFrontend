@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useAuth } from "../hooks/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { registerAccount } from "../api/userAuth";
 
 function Registeration() {
   const isLoggedIn = useAuth();
@@ -23,11 +24,15 @@ function Registeration() {
       email: "",
       username: "",
       password: "",
-      confirmpassword: "",
     },
   });
 
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = async (data) => {
+    data = { ...data, passwordConfirm: data.password };
+    console.log(data);
+    await registerAccount(data);
+    navigate("/login");
+  };
   return (
     <>
       <section className="bg-gray-50 dark:bg-gray-900">

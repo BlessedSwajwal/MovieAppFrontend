@@ -8,6 +8,10 @@ import MovieDetail, { loader as movieDetailLoader } from "./pages/movieDetail";
 import EditMovie from "./pages/editMovie";
 import SearchMovies, { loader as searchLoader } from "./pages/searchResults";
 import CreateMovie from "./pages/createMovie";
+import UpdateImage from "./pages/updateImage";
+import TrendingMovies, {
+  loader as trendingLoader,
+} from "./pages/trendingResults";
 
 const router = createBrowserRouter([
   {
@@ -34,6 +38,11 @@ const router = createBrowserRouter([
         element: <EditMovie />,
         loader: movieDetailLoader,
       },
+
+      {
+        path: "movies/updateImage/:movieId",
+        element: <UpdateImage />,
+      },
       {
         path: "movies/search/:query",
         element: <SearchMovies />,
@@ -42,6 +51,11 @@ const router = createBrowserRouter([
       {
         path: "movies/create",
         element: <CreateMovie />,
+      },
+      {
+        path: "movies/trending",
+        element: <TrendingMovies />,
+        loader: trendingLoader,
       },
     ],
   },

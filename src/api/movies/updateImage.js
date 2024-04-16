@@ -1,7 +1,7 @@
 import axios from "axios";
 
-async function updateNameAndDescription(movie, title, description, date) {
-  var apiUrl = import.meta.env.VITE_API_URL + `/Movies/Update`;
+async function updateImage(movieId, image) {
+  var apiUrl = import.meta.env.VITE_API_URL + `/Movies/UpdateImage`;
   try {
     const headers = {
       "Content-Type": "multipart/form-data",
@@ -9,16 +9,16 @@ async function updateNameAndDescription(movie, title, description, date) {
     };
 
     const formData = new FormData();
-    formData.append("movieId", movie.id);
-    formData.append("name", title);
-    formData.append("description", description);
-    formData.append("releaseDate", date);
+    formData.append("MovieId", movieId);
+    formData.append("ImageFile", image);
 
     var result = await axios.put(apiUrl, formData, { headers });
+    console.log("result");
+    console.log(result);
     return result.data;
   } catch (error) {
     console.log(error);
   }
 }
 
-export default updateNameAndDescription;
+export default updateImage;

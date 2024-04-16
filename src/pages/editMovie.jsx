@@ -2,16 +2,22 @@ import { useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import updateNameAndDescription from "../api/movies/updateNameAndDesc";
+import { movieImageFor } from "../api/movies/getMovies";
+import DatePicker from "react-date-picker";
 
 function EditMovie() {
   const { movie } = useLoaderData();
   const [title, setTitle] = useState(movie.movie.name);
   const [description, setDescription] = useState(movie.movie.description);
+  const [startDate, setStartDate] = useState(new Date());
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await updateNameAndDescription(movie.movie, title, description);
+    const date = `${
+      startDate.getMonth() + 1
+    }/${startDate.getDate()}/${startDate.getFullYear()}`;
+    await updateNameAndDescription(movie.movie, title, description, date);
     navigate(`/movies/${movie.movie.id}`);
   };
 
@@ -26,7 +32,7 @@ function EditMovie() {
           height: "500px",
           objectFit: "cover",
         }}
-        src={`data:image/jpeg;base64,${movie.movie.image}`}
+        src={movieImageFor(movie.movie.imagePath)}
         alt="Movie Poster"
       />
       <div>
@@ -68,6 +74,10 @@ function EditMovie() {
               onChange={(e) => setDescription(e.target.value)}
             />
           </div>
+          <DatePicker
+            value={startDate}
+            onChange={(date) => setStartDate(date)}
+          />
           <button
             type="submit"
             className="inline-flex items-center px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
